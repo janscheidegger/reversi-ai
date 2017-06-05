@@ -20,16 +20,20 @@ public class GameBoard {
         gameFields[3][4].setState(GameField.State.BLACK);
     }
 
-    public void putStone(Move move, GameField.State currentColor) {
-        gameFields[move.coordinate.x][move.coordinate.y].setState(currentColor);
-
-    }
-
-
-    public void print() {
-        for (GameField[] gameLine : gameFields) {
-            for (GameField aGameField : gameLine) {
-                System.out.print(aGameField.getState());
+    public void print(List<Move> validMoves) {
+        for (int i = 0; i < gameFields.length; i++) {
+            for (int j = 0; j < gameFields[i].length; j++) {
+                int count = 0;
+                for (Move move : validMoves) {
+                    if (move.coordinate.x == i && move.coordinate.y == j) {
+                        count++;
+                    }
+                }
+                if (count > 0) {
+                    System.out.print("O");
+                } else {
+                    System.out.print(gameFields[i][j].getState());
+                }
             }
             System.out.println();
         }
@@ -41,27 +45,44 @@ public class GameBoard {
         for (int i = 0; i < gameFields.length; i++) {
             for (int j = 0; j < gameFields[i].length; j++) {
                 if (gameFields[i][j].getState() == GameField.State.EMPTY) {
-                    getMove(currentColor, otherColor, validMoves, i, j).ifPresent(validMoves::add);
+                    getMoves(currentColor, otherColor, i, j).ifPresent(validMoves::add);
                 }
             }
         }
         return validMoves;
     }
 
-    private Optional<Move> getMove(GameField.State currentColor, GameField.State otherColor, List<Move> validMoves, int x, int y) {
+    private Optional<Move> getMoves(GameField.State currentColor, GameField.State otherColor, int x, int y) {
         Move move = new Move(x, y);
-        for(int xDirection = -1; xDirection <= 1; xDirection++) {
+        for (int xDirection = -1; xDirection <= 1; xDirection++) {
             for (int yDirection = -1; yDirection <= 1; yDirection++) {
+                List<Coordinate> stoneList = new ArrayList<>();
                 int counter = 1;
-                if((x + (counter * xDirection) < 0 || x + (counter * xDirection) > 7) || (y + (counter * yDirection) < 0 || y + (counter * yDirection) > 7)) continue;
-                if (gameFields[x + (counter * xDirection)][y + (counter * yDirection)].getState() == otherColor) {
-                    move.addStoneToRemoveList(new Coordinate(x + (counter * xDirection), y + (counter * yDirection)));
-                } else if (gameFields[x + (counter * xDirection)][y + (counter * yDirection)].getState() == currentColor && move.hasStonesToRemove()) {
-                    return Optional.of(move);
+                int xPos = x + (counter * xDirection);
+                int yPos = y + (counter * yDirection);
+
+                if (xPos < 0 || xPos > 7 || yPos < 0 || yPos > 7) {
+                    continue;
+                }
+                System.out.println("[" + x + ", " + y + "] x: " + xPos + ", y: " + yPos);
+                while (gameFields[xPos][yPos].getState() == otherColor) {
+                    System.out.println("added move");
+                    stoneList.add(new Coordinate(xPos, yPos));
+                    counter++;
+                    xPos = x + (counter * xDirection);
+                    yPos = y + (counter * yDirection);
+                }
+                if (gameFields[xPos][yPos].getState() == currentColor) {
+                    move.addStonesToRemoveList(stoneList);
+                    System.out.println("match");
                 }
             }
         }
-        return Optional.empty();
+        if (move.hasStonesToRemove()) {
+            return Optional.of(move);
+        } else {
+            return Optional.empty();
+        }
     }
 
     public GameField.State getOtherColor(GameField.State currentColor) {
@@ -72,7 +93,7 @@ public class GameBoard {
 
     public void executeMove(Move move, GameField.State currentColor) {
         gameFields[move.coordinate.x][move.coordinate.y].setState(currentColor);
-        for(Coordinate coordinate : move.getRemovedStones()) {
+        for (Coordinate coordinate : move.getRemovedStones()) {
             gameFields[coordinate.x][coordinate.y].setState(currentColor);
         }
     }

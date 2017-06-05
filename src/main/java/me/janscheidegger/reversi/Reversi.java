@@ -1,5 +1,6 @@
 package me.janscheidegger.reversi;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
@@ -15,18 +16,17 @@ public class Reversi {
 
     public Reversi() {
         GameBoard gameBoard = new GameBoard();
-        gameBoard.print();
-
         while (!hasWinner()) {
             List<Move> validMoves = gameBoard.getValidMoves(currentColor);
+            gameBoard.print(validMoves);
             for (int i = 0; i < validMoves.size();i++) {
                 System.out.println(i +") "+validMoves.get(i));
             }
+            System.out.println(currentColor.toString()+ "'s turn");
             int moveNumber = readline(validMoves.size());
             Move move = validMoves.get(moveNumber);
             gameBoard.executeMove(move, currentColor);
             changeCurrentPlayer();
-            gameBoard.print();
 
         }
     }
@@ -45,7 +45,7 @@ public class Reversi {
                 }
                 return i;
             } catch (NumberFormatException e) {
-                System.err.println("Invalid Number"+ line+"]");
+                System.err.println("Invalid Number ["+ line+"]");
             }
 
 

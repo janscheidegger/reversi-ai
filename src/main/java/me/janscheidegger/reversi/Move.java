@@ -13,9 +13,6 @@ public class Move {
     }
 
 
-    public void addStoneToRemoveList(Coordinate coordinateToRemove) {
-        this.removedStones.add(coordinateToRemove);
-    }
 
     public boolean hasStonesToRemove() {
         return removedStones.size() > 0;
@@ -31,5 +28,9 @@ public class Move {
                 "coordinate=" + coordinate +
                 ", removedStones=" + removedStones +
                 '}';
+    }
+
+    public void addStonesToRemoveList(List<Coordinate> stoneList) {
+        this.removedStones.addAll(stoneList);
     }
 }
