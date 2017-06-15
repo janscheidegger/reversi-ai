@@ -1,6 +1,5 @@
 package me.janscheidegger.reversi;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
@@ -16,23 +15,33 @@ public class Reversi {
 
     public Reversi() {
         GameBoard gameBoard = new GameBoard();
-        while (!hasWinner()) {
+        while (!hasWinner(gameBoard)) {
             List<Move> validMoves = gameBoard.getValidMoves(currentColor);
             gameBoard.print(validMoves);
-            for (int i = 0; i < validMoves.size();i++) {
-                System.out.println(i +") "+validMoves.get(i));
+            System.out.println("-1) PASS");
+            for (int i = 0; i < validMoves.size(); i++) {
+                System.out.println(i + ") " + validMoves.get(i));
             }
-            System.out.println(currentColor.toString()+ "'s turn");
+            System.out.println(currentColor.toString() + "'s turn");
             int moveNumber = readline(validMoves.size());
-            Move move = validMoves.get(moveNumber);
-            gameBoard.executeMove(move, currentColor);
+            if (moveNumber != -1) {
+                Move move = validMoves.get(moveNumber);
+                gameBoard.executeMove(move, currentColor);
+            }
             changeCurrentPlayer();
 
         }
+
+        System.out.println("Black: " + gameBoard.countStones(GameField.State.BLACK));
+        System.out.println("White: " + gameBoard.countStones(GameField.State.WHITE));
     }
 
-    private boolean hasWinner() {
-        return false;
+    private boolean hasWinner(GameBoard gameBoard) {
+        int blackMoves = gameBoard.getValidMoves(GameField.State.BLACK).size();
+        int whiteMoves = gameBoard.getValidMoves(GameField.State.WHITE).size();
+
+        return whiteMoves == 0 && blackMoves == 0;
+
     }
 
     private int readline(int max) {
@@ -40,12 +49,12 @@ public class Reversi {
             String line = scanner.nextLine();
             try {
                 int i = Integer.parseInt(line);
-                if (i > max) {
-                    System.err.println("Invalid Number [" + line+"]");
+                if (i >= max) {
+                    System.err.println("Invalid Number [" + line + "]");
                 }
                 return i;
             } catch (NumberFormatException e) {
-                System.err.println("Invalid Number ["+ line+"]");
+                System.err.println("Invalid Number [" + line + "]");
             }
 
 
