@@ -23,6 +23,10 @@ public class GameField {
         this.state = State.EMPTY;
     }
 
+    public GameField(GameField field) {
+        state = field.state;
+    }
+
     public GameField(State state) {
         this.state = state;
     }

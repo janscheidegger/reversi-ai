@@ -25,13 +25,11 @@ public class GameBoard {
     }
 
     public GameBoard(GameField[][] oldField) {
-        this.gameFields = new GameField[oldField.length][];
-        for(int i = 0; i < oldField.length; i++)
-        {
-            GameField[] aGameField = oldField[i];
-            int   aLength = aGameField.length;
-            this.gameFields[i] = new GameField[aLength];
-            System.arraycopy(aGameField, 0, this.gameFields[i], 0, aLength);
+        this.gameFields = new GameField[8][8];
+        for(int i = 0; i < oldField.length; i++) {
+            for (int j = 0; j < gameFields[i].length; j++) {
+                gameFields[i][j] = new GameField(oldField[i][j]);
+            }
         }
     }
 

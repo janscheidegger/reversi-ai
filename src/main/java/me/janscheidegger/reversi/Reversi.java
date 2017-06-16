@@ -33,6 +33,7 @@ public class Reversi {
                     gameBoard.executeMove(move, currentColor);
                 }
             } else {
+
                 final GameBoard copy = gameBoard.copy();
                 final Move nextMove = ai.getNextMove(copy, currentColor);
                 System.out.println("ai chose move: " + nextMove);
