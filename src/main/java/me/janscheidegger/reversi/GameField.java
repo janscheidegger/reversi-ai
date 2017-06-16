@@ -3,7 +3,7 @@ package me.janscheidegger.reversi;
 public class GameField {
 
     public enum State {
-        BLACK("B"), WHITE("W"), EMPTY("E");
+        BLACK("B"), WHITE("W"), EMPTY("");
 
         private String value;
 

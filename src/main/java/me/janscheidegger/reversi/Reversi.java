@@ -5,18 +5,39 @@ import me.janscheidegger.reversi.ai.AiPlayer;
 import java.util.List;
 import java.util.Scanner;
 
+/**
+ * Reversi ist ein Spiel beim welchem es das Ziel ist, am Ende möglichst viele Steine zu haben.
+ * Steine können immer neben einem Stein des Gegner gesetzt werden, wenn auf selber Linie ein eigener Stein liegt.
+ * Die dazwischenliegenden Steine des Gegners können anschliessend gedreht werden.
+ *
+ * Der AI Spieler hat ein Konfigurierbares Ply anschliessend sucht er mit negaMax + AlphaBeta Pruning die optmale Strategie
+ *
+ * Die Bewertung basiert Feldbewertung. Bei Reversi ist es empfehlenswert nicht die Felder vor den Ecken zu spielen, deshalb
+ * habe diese eine schlechtere Bewertung. Eckfelder haben dafür eine sehr hohe Bewertung, da diese nicht mehr zurückerobert
+ * werden können, wenn sie mal im Besitz eines Spielers sind.
+ *
+ * Das Spiel funktioniert in der Konsole. Mögliche Züge sind mit Zahlen markiert auf dem Spielfeld
+ * Existierende Steine sind W oder B für die Farben Weiss oder Schwarz
+ *
+ * Als Hilfe wird zusätzlich noch angezeigt, welche Steine alle entfernt werden.
+ *
+ * In der Konsole wird immer angezeigt, welcher Zug gespielt wurde.
+ */
+
 public class Reversi {
+
+    private static final int PLY = 8;
 
     public static void main(String[] args) {
         new Reversi();
     }
 
-    Scanner scanner = new Scanner(System.in);
-    GameField.State currentColor = GameField.State.BLACK;
-    AiPlayer ai = new AiPlayer();
+    private Scanner scanner = new Scanner(System.in);
+    private GameField.State currentColor = GameField.State.BLACK;
+    private AiPlayer ai = new AiPlayer(PLY);
 
 
-    public Reversi() {
+    private Reversi() {
         GameBoard gameBoard = new GameBoard();
         while (!hasWinner(gameBoard)) {
             List<Move> validMoves = gameBoard.getValidMoves(currentColor);
@@ -33,7 +54,6 @@ public class Reversi {
                     gameBoard.executeMove(move, currentColor);
                 }
             } else {
-
                 final GameBoard copy = gameBoard.copy();
                 final Move nextMove = ai.getNextMove(copy, currentColor);
                 System.out.println("ai chose move: " + nextMove);

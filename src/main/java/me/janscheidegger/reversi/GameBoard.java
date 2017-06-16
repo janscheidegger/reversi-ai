@@ -37,18 +37,21 @@ public class GameBoard {
         for (int i = 0; i < gameFields.length; i++) {
             for (int j = 0; j < gameFields[i].length; j++) {
                 int count = 0;
-                for (Move move : validMoves) {
-                    if (move.coordinate.x == i && move.coordinate.y == j) {
+                int moveNumber = 0;
+                for (int moveCounter = 0; moveCounter < validMoves.size(); moveCounter++) {
+                    if (validMoves.get(moveCounter).coordinate.x == i && validMoves.get(moveCounter).coordinate.y == j) {
                         count++;
+                        moveNumber = moveCounter;
                     }
                 }
                 if (count > 0) {
-                    System.out.print("O");
+                    System.out.print(+moveNumber+"\t|");
                 } else {
-                    System.out.print(gameFields[i][j].getState());
+                    System.out.print(gameFields[i][j].getState()+"\t|");
                 }
             }
             System.out.println();
+            System.out.println("--------------------------------");
         }
     }
 
