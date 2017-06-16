@@ -1,5 +1,7 @@
 package me.janscheidegger.reversi;
 
+import me.janscheidegger.reversi.ai.AiPlayer;
+
 import java.util.List;
 import java.util.Scanner;
 
@@ -11,6 +13,7 @@ public class Reversi {
 
     Scanner scanner = new Scanner(System.in);
     GameField.State currentColor = GameField.State.BLACK;
+    AiPlayer ai = new AiPlayer();
 
 
     public Reversi() {
@@ -23,10 +26,17 @@ public class Reversi {
                 System.out.println(i + ") " + validMoves.get(i));
             }
             System.out.println(currentColor.toString() + "'s turn");
-            int moveNumber = readline(validMoves.size());
-            if (moveNumber != -1) {
-                Move move = validMoves.get(moveNumber);
-                gameBoard.executeMove(move, currentColor);
+            if (currentColor.equals(GameField.State.WHITE)) {
+                int moveNumber = readline(validMoves.size());
+                if (moveNumber != -1) {
+                    Move move = validMoves.get(moveNumber);
+                    gameBoard.executeMove(move, currentColor);
+                }
+            } else {
+                final GameBoard copy = gameBoard.copy();
+                final Move nextMove = ai.getNextMove(copy, currentColor);
+                System.out.println("ai chose move: " + nextMove);
+                gameBoard.executeMove(nextMove, currentColor);
             }
             changeCurrentPlayer();
 

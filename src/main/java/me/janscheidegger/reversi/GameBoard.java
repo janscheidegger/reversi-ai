@@ -20,6 +20,21 @@ public class GameBoard {
         gameFields[3][4].setState(GameField.State.BLACK);
     }
 
+    public GameField[][] getGameFields() {
+        return gameFields;
+    }
+
+    public GameBoard(GameField[][] oldField) {
+        this.gameFields = new GameField[oldField.length][];
+        for(int i = 0; i < oldField.length; i++)
+        {
+            GameField[] aGameField = oldField[i];
+            int   aLength = aGameField.length;
+            this.gameFields[i] = new GameField[aLength];
+            System.arraycopy(aGameField, 0, this.gameFields[i], 0, aLength);
+        }
+    }
+
     public void print(List<Move> validMoves) {
         for (int i = 0; i < gameFields.length; i++) {
             for (int j = 0; j < gameFields[i].length; j++) {
@@ -64,9 +79,9 @@ public class GameBoard {
                 if (checkBounds(xPos) || checkBounds(yPos)) {
                     continue;
                 }
-                System.out.println("[" + x + ", " + y + "] x: " + xPos + ", y: " + yPos);
+                //System.out.println("[" + x + ", " + y + "] x: " + xPos + ", y: " + yPos);
                 while (gameFields[xPos][yPos].getState() == otherColor) {
-                    System.out.println("added move");
+                    //System.out.println("added move");
                     stoneList.add(new Coordinate(xPos, yPos));
                     counter++;
 
@@ -78,7 +93,7 @@ public class GameBoard {
                 }
                 if (gameFields[xPos][yPos].getState() == currentColor) {
                     move.addStonesToRemoveList(stoneList);
-                    System.out.println("match");
+//                    System.out.println("match");
                 }
             }
         }
@@ -116,5 +131,9 @@ public class GameBoard {
             }
         }
         return count;
+    }
+
+    public GameBoard copy() {
+        return new GameBoard(gameFields);
     }
 }
